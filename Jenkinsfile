@@ -22,7 +22,7 @@ pipeline {
             }
         stage('checkov') {
             steps { 
-                sh '"checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c "${params.checkov}""'
+                sh 'checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c CKV_AWS_CUSTOM_TYPES -c CKV_AWS_CUSTOM_TAGS'
                 }
             }
         }
