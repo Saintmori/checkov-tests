@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+        choice(name: "checkov-check-id", choices: ["CKV_AWS_CUSTOM_TYPES", "CKV_AWS_CUSTOM_TAGS"], description: "checkov checks you want to run on this code")
+    }
     stages {
         stage('init') {
             steps {
@@ -19,7 +22,9 @@ pipeline {
             }
         stage('checkov') {
             steps { 
-                sh 'checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c CKV_AWS_CUSTOM_TYPES -c CKV_AWS_CUSTOM_TAGS'
+                sh '''
+                checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c $params.checkov-check-id 
+                '''
                 }
             }
         }
