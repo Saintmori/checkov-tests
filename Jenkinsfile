@@ -24,6 +24,7 @@ pipeline {
                     sh 'terraform plan'
                     sh 'terraform plan -out tf.plan'
                     sh 'terraform show -json tf.plan > tf.json'
+                    echo "$params.checkov"
                 }
             }
         stage('checkov') {
