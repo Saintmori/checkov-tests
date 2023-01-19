@@ -4,6 +4,6 @@ resource "aws_instance" "web_instance" {
   tags = {
     Name        = "second"
     env = "dev"
-    team = "infra"
+    # team = "infra"
   }
 }
