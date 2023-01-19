@@ -29,8 +29,9 @@ pipeline {
             }
         stage('checkov') {
             steps { 
-                sh
-                checkov -d . --external-checks-git "https://github.com/Saintmori/chekov-checks.git" -c "${params.checkov}"
+                sh '''
+                checkov -d . --external-checks-git "https://github.com/Saintmori/chekov-checks.git" ''' -c "${params.checkov}"
+                
                 }
             }
         }
