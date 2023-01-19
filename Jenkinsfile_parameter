@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+     parameters {
+    choice(
+        name: 'checkov',
+        choices: "CKV_AWS_CUSTOM_TYPES\nCKV_AWS_CUSTOM_TAGS\nALL_CHECKS",
+        description: 'checkov checks you want to run on this code' )
+  }
+    // parameters {
+    //     choice(name: "checkov", choices: ["CKV_AWS_CUSTOM_TYPES", "CKV_AWS_CUSTOM_TAGS"], description: "checkov checks you want to run on this code")
+    // }
+    stages {
+        stage('init') {
+            steps {
+                sh 'terraform init'}
+                }
+        stage('validate') {
+            steps {
+                    sh 'terraform validate'
+                }
+            }
+        stage('TF-plan') {
+            steps {
+                    sh 'terraform plan'
+                    sh 'terraform plan -out tf.plan'
+                    sh 'terraform show -json tf.plan > tf.json'
+                    echo "$params.checkov"
+                }
+            }
+        stage('checkov') {
+            steps { 
+                script {
+                switch(checkov) {
+                    case "CKV_AWS_CUSTOM_TYPES":
+                        sh "checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c CKV_AWS_CUSTOM_TYPES"
+                        break;
+                    case "CKV_AWS_CUSTOM_TAGS":
+                        sh "checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c CKV_AWS_CUSTOM_TAGS"
+                        break;
+                    case "ALL_CHECKS":
+                        sh "checkov -d . --external-checks-git https://github.com/Saintmori/chekov-checks.git -c CKV_AWS_CUSTOM_TAGS -c CKV_AWS_CUSTOM_TYPES"
+                        break;
+                }        
+            }
+        }
+    }
+    }
+}
