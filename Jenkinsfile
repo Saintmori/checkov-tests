@@ -1,8 +1,14 @@
 pipeline {
     agent any
-    parameters {
-        choice(name: "checkov", choices: ["CKV_AWS_CUSTOM_TYPES", "CKV_AWS_CUSTOM_TAGS"], description: "checkov checks you want to run on this code")
-    }
+     parameters {
+    choice(
+        name: 'checkov',
+        choices: "CKV_AWS_CUSTOM_TYPES\nCKV_AWS_CUSTOM_TAGS",
+        description: 'checkov checks you want to run on this code' )
+  }
+    // parameters {
+    //     choice(name: "checkov", choices: ["CKV_AWS_CUSTOM_TYPES", "CKV_AWS_CUSTOM_TAGS"], description: "checkov checks you want to run on this code")
+    // }
     stages {
         stage('init') {
             steps {
